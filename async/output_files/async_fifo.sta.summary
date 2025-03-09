@@ -1,0 +1,101 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1100mV 85C Model Setup 'wclk'
+Slack : -1.004
+TNS   : -3.962
+
+Type  : Slow 1100mV 85C Model Setup 'rclk'
+Slack : -0.961
+TNS   : -4.083
+
+Type  : Slow 1100mV 85C Model Hold 'wclk'
+Slack : 0.576
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'rclk'
+Slack : 0.597
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'rclk'
+Slack : -0.724
+TNS   : -5.588
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'wclk'
+Slack : -0.724
+TNS   : -5.575
+
+Type  : Slow 1100mV 0C Model Setup 'wclk'
+Slack : -1.050
+TNS   : -4.151
+
+Type  : Slow 1100mV 0C Model Setup 'rclk'
+Slack : -1.009
+TNS   : -4.288
+
+Type  : Slow 1100mV 0C Model Hold 'wclk'
+Slack : 0.536
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'rclk'
+Slack : 0.557
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'rclk'
+Slack : -0.724
+TNS   : -5.852
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'wclk'
+Slack : -0.724
+TNS   : -5.561
+
+Type  : Fast 1100mV 85C Model Setup 'rclk'
+Slack : 0.189
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Setup 'wclk'
+Slack : 0.199
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'rclk'
+Slack : 0.224
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'wclk'
+Slack : 0.224
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'wclk'
+Slack : -0.087
+TNS   : -0.429
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'rclk'
+Slack : -0.083
+TNS   : -0.409
+
+Type  : Fast 1100mV 0C Model Setup 'rclk'
+Slack : 0.234
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Setup 'wclk'
+Slack : 0.241
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'rclk'
+Slack : 0.217
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'wclk'
+Slack : 0.219
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'wclk'
+Slack : -0.090
+TNS   : -0.444
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'rclk'
+Slack : -0.083
+TNS   : -0.409
+
+------------------------------------------------------------
