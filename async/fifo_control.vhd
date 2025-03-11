@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity fifo_control is
 	generic (
-		f_DATA_WIDTH : natural := 10;
+		f_DATA_WIDTH : natural := 8;
 		f_ADDRESS_WIDTH : natural := 5
 	 );
     port(clk          : in  std_logic;
@@ -19,14 +19,16 @@ entity fifo_control is
   end fifo_control;
   
 architecture arch of fifo_control is
+  signal lsbs_equal : std_logic;
   begin
   -- compute occupancy
 	fifo_occu <= std_logic_vector(unsigned(addr_mem) - unsigned(sync_pointer));
-	
+	lsbs_equal <= '1' when sync_pointer(f_ADDRESS_WIDTH-2 downto 0) = addr_mem(f_ADDRESS_WIDTH-2 downto 0) else '0';
+	pointer <= addr_mem;
 	-- process to calculate empty or full
 	process(sync_pointer)
 		begin
-		 if sync_pointer(f_ADDRESS_WIDTH - 1) = addr_mem(f_ADDRESS_WIDTH - 1) then
+		 if (sync_pointer(f_ADDRESS_WIDTH - 1) = addr_mem(f_ADDRESS_WIDTH - 1)) and lsbs_equal = '1' then
 			full_empty <= '1';
 		 else
 			full_empty <= '0';
@@ -34,7 +36,6 @@ architecture arch of fifo_control is
   end process;
   
   -- process to compute on rising clock edge
-  
   process(reset, clk)
 	begin
 		if reset = '1' then 

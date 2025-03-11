@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity async_fifo is
  generic (
-	f_DATA_WIDTH : natural := 10;
+	f_DATA_WIDTH : natural := 8;
 	f_ADDRESS_WIDTH : natural := 5
  );
 	
@@ -14,16 +14,16 @@ entity async_fifo is
 	rclk : in std_logic;
 
 	-- OCCUPANCY
-	fifo_occu_in : out std_logic_vector(4 downto 0);
-	fifo_occu_out : out std_logic_vector(4 downto 0);
+	fifo_occu_in 	: out std_logic_vector(f_ADDRESS_WIDTH-1 downto 0);
+	fifo_occu_out 	: out std_logic_vector(f_ADDRESS_WIDTH-1 downto 0);
 
 	-- WRITE
-	write_enable : in std_logic;
-	write_data_in : in std_logic_vector(7 downto 0);
+	write_enable 	: in std_logic;
+	write_data_in 	: in std_logic_vector(f_DATA_WIDTH-1 downto 0);
 
 	-- READ
-	read_enable : in std_logic;
-	read_data_out : out std_logic_vector(7 downto 0)
+	read_enable   	: in std_logic;
+	read_data_out 	: out std_logic_vector(f_DATA_WIDTH-1 downto 0)
  );
 end async_fifo;
 
@@ -39,7 +39,7 @@ architecture ar of async_fifo is
 	signal empty          : std_logic;
 	signal w_en           : std_logic;
 	signal r_en           : std_logic;
-	
+	signal n_full			 : std_logic;
 	
 	component fifo_control is
 		port( clk          : in  std_logic;
@@ -53,7 +53,40 @@ architecture ar of async_fifo is
 				w_r_en       : out std_logic);
 	end component;
 	
+	component mem_control is
+		port ( wclk 	 		: in 	std_logic;
+				 rclk 			: in 	std_logic;
+				 write_en		: in 	std_logic;
+				 read_en 		: in 	std_logic;
+				 raddr			: in 	std_logic_vector((f_ADDRESS_WIDTH - 1) downto 0);
+				 waddr			: in 	std_logic_vector((f_ADDRESS_WIDTH - 1) downto 0);
+				 data_in			: in	std_logic_vector((f_DATA_WIDTH - 1) downto 0);
+				 data_out 		: out	std_logic_vector((f_DATA_WIDTH - 1) downto 0));
+	end component;
+	
+	
+	component fifo_sync is
+		port( clk		: in std_logic;
+				reset		: in std_logic;
+				ptr		: in std_logic_vector(f_ADDRESS_WIDTH - 1 downto 0);
+				sync_ptr : buffer std_logic_vector(f_ADDRESS_WIDTH - 1 downto 0));
+	end component;
+	
+	
 	begin
+	
+	full <= not n_full;
+	mem_ctrl : mem_control
+	port map (	wclk 		=> wclk,
+					rclk 		=> rclk,
+					write_en => w_en,
+					read_en  => r_en,
+					raddr    => raddr,
+					waddr		=> waddr,
+					data_in  => write_data_in,
+					data_out => read_data_out);
+	
+	
 	-- map write control ports
 	write_control : fifo_control
 	port map( clk => wclk,
@@ -62,7 +95,7 @@ architecture ar of async_fifo is
 				 sync_pointer => rptr_sync,
 				 pointer => wptr,
 				 fifo_occu => fifo_occu_in,
-				 full_empty => full,
+				 full_empty => n_full,
 				 addr_mem => waddr,
 				 w_r_en => w_en);
 				 
@@ -77,5 +110,16 @@ architecture ar of async_fifo is
 				 full_empty => empty,
 				 addr_mem => raddr,
 				 w_r_en => r_en);
-
-	end ar;
+				 
+	read_sync : fifo_sync
+	port map( clk => rclk,
+				 reset => reset,
+				 ptr  => wptr,
+				 sync_ptr => wptr_sync);
+	
+	write_sync : fifo_sync
+	port map( clk => wclk,
+				 reset => reset,
+				 ptr  => rptr,
+				 sync_ptr => rptr_sync);
+end ar;
