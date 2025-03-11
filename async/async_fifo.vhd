@@ -42,13 +42,18 @@ architecture ar of async_fifo is
 	signal n_full			 : std_logic;
 	
 	component fifo_control is
+		generic (
+			  f_DATA_WIDTH : natural := 8;
+			  f_ADDRESS_WIDTH : natural := 5;
+			  is_write_control : boolean := true
+		 );
 		port( clk          : in  std_logic;
 				reset        : in  std_logic;
 				enable       : in  std_logic;
 				sync_pointer : in  std_logic_vector((f_ADDRESS_WIDTH - 1) downto 0);
 				pointer      : out std_logic_vector((f_ADDRESS_WIDTH - 1) downto 0);
 				fifo_occu    : out std_logic_vector((f_ADDRESS_WIDTH - 1) downto 0);
-				full_empty   : out std_logic;
+				full_empty   : buffer std_logic;
 				addr_mem     : out std_logic_vector((f_ADDRESS_WIDTH - 1) downto 0);
 				w_r_en       : out std_logic);
 	end component;
@@ -89,6 +94,11 @@ architecture ar of async_fifo is
 	
 	-- map write control ports
 	write_control : fifo_control
+	generic map (
+    f_DATA_WIDTH => f_DATA_WIDTH,
+    f_ADDRESS_WIDTH => f_ADDRESS_WIDTH,
+    is_write_control => true
+	)
 	port map( clk => wclk,
 				 reset => reset,
 				 enable => write_enable,
@@ -101,6 +111,11 @@ architecture ar of async_fifo is
 				 
 	-- map read control ports
 	read_control : fifo_control
+	generic map (
+    f_DATA_WIDTH => f_DATA_WIDTH,
+    f_ADDRESS_WIDTH => f_ADDRESS_WIDTH,
+    is_write_control => false
+	)
 	port map( clk => rclk,
 				 reset => reset,
 				 enable => read_enable,

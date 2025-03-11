@@ -5,7 +5,8 @@ use ieee.numeric_std.all;
 entity fifo_control is
 	generic (
 		f_DATA_WIDTH : natural := 8;
-		f_ADDRESS_WIDTH : natural := 5
+		f_ADDRESS_WIDTH : natural := 5;
+		is_write_control : boolean := true
 	 );
     port(clk          : in  std_logic;
          reset        : in  std_logic;
@@ -13,7 +14,7 @@ entity fifo_control is
          sync_pointer : in  std_logic_vector((f_ADDRESS_WIDTH - 1) downto 0);
          pointer      : out std_logic_vector((f_ADDRESS_WIDTH - 1) downto 0);
          fifo_occu    : out std_logic_vector((f_ADDRESS_WIDTH - 1) downto 0);
-         full_empty   : out std_logic;
+         full_empty   : buffer std_logic;
          addr_mem     : buffer std_logic_vector((f_ADDRESS_WIDTH - 1) downto 0);
          w_r_en       : out std_logic);
   end fifo_control;
@@ -43,8 +44,13 @@ architecture arch of fifo_control is
 			w_r_en    <= '0';
 		elsif rising_edge(clk) then
 			if enable = '1' then
-				w_r_en <= '1';
-				addr_mem <= std_logic_vector(unsigned(addr_mem) + 1);
+				if is_write_control and full_empty = '1' then
+					w_r_en <= '1';
+					addr_mem <= std_logic_vector(unsigned(addr_mem) + 1);
+				elsif is_write_control = false and full_empty = '1' then
+					w_r_en <= '1';
+					addr_mem <= std_logic_vector(unsigned(addr_mem) + 1);
+				end if;
 			end if;
 		end if;
 	end process;
