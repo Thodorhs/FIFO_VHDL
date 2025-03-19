@@ -29,6 +29,7 @@
 *.sdc
 *.qsf
 *.txt
+*.qpf
 
 # Ignore Quartus II generated folders globally
 **/db/
