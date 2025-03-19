@@ -27,6 +27,8 @@
 *example*
 *sopc_*
 *.sdc
+*.qsf
+*.txt
 
 # Ignore Quartus II generated folders globally
 **/db/
@@ -37,5 +39,5 @@
 **/*_sim/
 incremental_db/
 db/
-_output_files/
+*/output_files/
 PLLJ_PLLSPE_INFO.txt
